@@ -52,7 +52,9 @@ app.get('/hello', (req,res) => {
 
 app.post('/urls', (req,res) => {
   console.log(req.body);
-  res.send("Ok");
+  const shortURL = generateRandomString(6);
+  urlDatabase[shortURL] = req.body.longURL;
+  res.send(urlDatabase);
 });
 
 app.listen(PORT, () => {
