@@ -3,6 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080;
 
+const generateRandomString = () => {
+  const randomSixDigNum = Math.floor(Math.random()*100000000000);
+  return randomSixDigNum.toString(36).slice(0,6);
+}
 
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
