@@ -22,6 +22,10 @@ app.get('/urls.json', (req,res) => {
   res.json(urlDatabase);
 });
 
+app.get('/urls/new', (req,res) => {
+  res.render('urls_new');
+});
+
 app.get('/urls/:shortURL', (req,res) => {
   const shortURL = req.params.shortURL;
   const longURL = urlDatabase[shortURL];
