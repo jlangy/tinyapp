@@ -3,9 +3,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080;
 
-const generateRandomString = () => {
-  const randomSixDigNum = Math.floor(Math.random()*100000000000);
-  return randomSixDigNum.toString(36).slice(0,6);
+
+const generateRandomString = (numOfDigits) => {
+  const alphaNums = 'QWERTYUIOPLKJHGFDSAZXCVBNMqwertyuioplkjhgfdsazxcvbnm1234567890'.split('');
+  let randomNum = '';
+  for(let i = 0; i < numOfDigits; i++){
+    const randomIndex = Math.floor(Math.random()*62);
+    randomNum += alphaNums[randomIndex];
+  }
+  return randomNum;
 }
 
 const urlDatabase = {
