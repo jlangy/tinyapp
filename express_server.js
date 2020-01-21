@@ -20,6 +20,14 @@ const urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
+const users = {
+  123: {
+    id: "123",
+    email: "email@email.com",
+    password: "password123"
+  }
+}
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
@@ -55,6 +63,18 @@ app.get('/u/:shortURL', (req,res) => {
 
 app.get('/hello', (req,res) => {
   res.send('<html><body>Hello <b>World</b></body></html>\n');
+});
+
+app.get('/register', (req,res) => {
+  const templateVars = { username: req.cookies['username']}
+  res.render('register', templateVars);
+});
+
+app.post('/register', (req,res) => {
+  const userID = generateRandomString(6);
+  users[userID] = { id: userID, email: req.body.email, password: req.body.password }
+  res.cookie("user_id", userID);
+  res.redirect('/urls');
 });
 
 app.post('/urls', (req,res) => {
