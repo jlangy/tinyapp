@@ -12,7 +12,15 @@
   <body>
 
     <%- include('partials/_header') %>
-
+    <% if(error && error === 'empty') { %>
+      <div class="alert alert-danger" role="alert">
+        One or more fields were left blank, please fill in all fields.
+      </div>
+    <% } else if(error && error === 'repeat') { %>
+      <div class="alert alert-danger" role="alert">
+        That e-mail address is already registered. Please login or use a different e-mail.
+      </div>
+    <% } %>
     <main class="d-flex justify-content-center" style="margin: 1em;">
       <div class="card w-25">
         <div class="card-body">

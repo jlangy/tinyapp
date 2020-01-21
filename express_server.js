@@ -28,6 +28,15 @@ const users = {
   }
 }
 
+const repeatEmail = email => {
+  for(user in users){
+    if(users[user].email === email){
+      console.log('email repeated!');
+      return true;
+    }
+  } return false;
+}
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
@@ -37,7 +46,7 @@ app.get('/', (req,res) => {
 });
 
 app.get('/urls', (req,res) => {
-  const templateVars =  { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars =  { urls: urlDatabase, username: req.cookies.username };
   res.render('urls_index', templateVars);
 });
 
@@ -66,11 +75,18 @@ app.get('/hello', (req,res) => {
 });
 
 app.get('/register', (req,res) => {
-  const templateVars = { username: req.cookies['username']}
+  const templateVars = { username: req.cookies['username'], error: null}
   res.render('register', templateVars);
 });
 
 app.post('/register', (req,res) => {
+  if(!req.body.email || !req.body.password){
+    res.status(400);
+    return res.render('register', {username: null, error: 'empty'});
+  } else if(repeatEmail(req.body.email)){
+    res.status(400);
+    return res.render('register', {username: null, error: 'repeat'});
+  }
   const userID = generateRandomString(6);
   users[userID] = { id: userID, email: req.body.email, password: req.body.password }
   res.cookie("user_id", userID);
