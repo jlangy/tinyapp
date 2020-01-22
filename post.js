@@ -35,8 +35,9 @@ const register = (req,res) => {
 }
 
 const createURL = (req,res) => {
+  const userID = req.cookies.user_id;
   const shortURL = generateRandomString(6);
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = { longURL: req.body.longURL, userID };
   res.redirect(`/urls/${shortURL}`);
 }
 
