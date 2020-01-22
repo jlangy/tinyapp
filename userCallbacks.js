@@ -41,10 +41,10 @@ const register = (req,res) => {
     res.status(400);
     return res.render('register', {user: null, error: 'repeat'});
   }
-  const userID = generateRandomString(6);
+  const userId = generateRandomString(6);
   const passwordHash = bcrypt.hashSync(password, 10);
-  users[userID] = { id: userID, email, password: passwordHash };
-  req.session.userId = userID;
+  users[userId] = { id: userId, email, password: passwordHash };
+  req.session.userId = userId;
   res.redirect('/urls');
 };
 

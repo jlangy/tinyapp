@@ -16,10 +16,10 @@ const getUserByEmail = (email, users) => {
   }
 };
 
-const urlsForUser = (userID, urlDatabase) => {
+const urlsForUser = (userId, urlDatabase) => {
   const URLs = {};
   for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === userID) {
+    if (urlDatabase[shortURL].userId === userId) {
       URLs[shortURL] = urlDatabase[shortURL].longURL;
     }
   }

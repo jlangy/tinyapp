@@ -5,9 +5,9 @@ const generateRandomString = require('./helpers').generateRandomString;
 // ---------------GET REQUESTS-------------------------
 
 const browseURLS = (req,res) => {
-  const userID = req.session.userId;
-  if (userID) {
-    const URLs = urlsForUser(userID, urlDatabase);
+  const userId = req.session.userId;
+  if (userId) {
+    const URLs = urlsForUser(userId, urlDatabase);
     const templateVars =  { urls: URLs, user: users[req.session.userId] };
     return res.render('urls_index', templateVars);
   }
@@ -15,18 +15,18 @@ const browseURLS = (req,res) => {
 };
 
 const readURL = (req,res) => {
-  const userID = req.session.userId;
-  if (!userID) {
+  const userId = req.session.userId;
+  if (!userId) {
     return res.render('urls_show', {error: 'notLoggedIn'});
   }
-  const userURLs = urlsForUser(userID, urlDatabase);
+  const userURLs = urlsForUser(userId, urlDatabase);
   const shortURL = req.params.shortURL;
   if (shortURL in userURLs) {
     const longURL = userURLs[shortURL];
-    const templateVars = { shortURL, longURL, user: users[userID], error: null };
+    const templateVars = { shortURL, longURL, user: users[userId], error: null };
     return res.render('urls_show', templateVars);
   }
-  res.render('urls_show', {error: 'notFound', user: users[userID]});
+  res.render('urls_show', {error: 'notFound', user: users[userId]});
 };
 
 const linkToExternalURL = (req,res) => {
@@ -44,27 +44,27 @@ const renderCreateURLPage = (req,res) => {
 //------------------------POST REQUESTS-----------------------
 
 const createURL = (req,res) => {
-  const userID = req.session.userId;
+  const userId = req.session.userId;
   const shortURL = generateRandomString(6);
-  if (userID) {
-    urlDatabase[shortURL] = { longURL: req.body.longURL, userID };
+  if (userId) {
+    urlDatabase[shortURL] = { longURL: req.body.longURL, userId: userId };
   }
   res.redirect(`/urls/${shortURL}`);
 };
 
 const updateURL = (req,res) => {
-  const userID = req.session.userId;
+  const userId = req.session.userId;
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL].userID === userID) {
+  if (urlDatabase[shortURL].userId === userId) {
     urlDatabase[shortURL].longURL = req.body.longURL;
   }
   res.redirect(`/urls/${shortURL}`);
 };
 
 const deleteURL = (req,res) => {
-  const userID = req.session.userId;
+  const userId = req.session.userId;
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL].userID === userID) {
+  if (urlDatabase[shortURL].userId === userId) {
     delete urlDatabase[shortURL];
   }
   res.redirect('/urls');
