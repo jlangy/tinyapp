@@ -48,9 +48,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set('view engine', 'ejs');
 
-app.get('/', (req,res) => {
-  res.send("Hello!");
-});
 
 app.get('/urls', (req,res) => {
   const templateVars =  { urls: urlDatabase, user: users[req.cookies.user_id] };
@@ -77,10 +74,6 @@ app.get('/u/:shortURL', (req,res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 });
 
-app.get('/hello', (req,res) => {
-  res.send('<html><body>Hello <b>World</b></body></html>\n');
-});
-
 app.get('/register', (req,res) => {
   const templateVars = { user: users[req.cookies.user_id], error: null}
   res.render('register', templateVars);
@@ -93,6 +86,7 @@ app.get('/login', (req,res) => {
 
 app.post('/login', (req,res) => {
   if(req.body.email === ''){
+    res.status(400);
     return res.render('login', { error: 'empty', user: null });
   }
   const userId = getUserIdFromEmail(req.body.email);
