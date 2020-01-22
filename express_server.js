@@ -32,15 +32,6 @@ const getUserIdFromEmail = email => {
     if(users[user].email === email){
       return user;
     }
-  }
-}
-
-const repeatEmail = email => {
-  for(user in users){
-    if(users[user].email === email){
-      console.log('email repeated!');
-      return true;
-    }
   } return false;
 }
 
@@ -106,7 +97,7 @@ app.post('/register', (req,res) => {
   if(!req.body.email || !req.body.password){
     res.status(400);
     return res.render('register', {user: null, error: 'empty'});
-  } else if(repeatEmail(req.body.email)){
+  } else if(getUserIdFromEmail(req.body.email)){
     res.status(400);
     return res.render('register', {user: null, error: 'repeat'});
   }
