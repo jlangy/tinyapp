@@ -3,8 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const PORT = 8080;
-const { browseURLS, renderCreateURLPage, readURL, linkToExternalURL, renderRegisterPage, renderLoginPage} = require('./get');
-const { login, register, createURL, updateURL, deleteURL, logout } = require('./post');
+const {browseURLS, readURL, linkToExternalURL, renderCreateURLPage, createURL, updateURL, deleteURL } = require('./urlCallbacks');
+const { renderRegisterPage, renderLoginPage, login, register, logout } = require('./userCallbacks');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
