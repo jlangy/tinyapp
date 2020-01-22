@@ -18,4 +18,14 @@ const getUserIdFromEmail = email => {
   } return false;
 }
 
-module.exports = { generateRandomString, getUserIdFromEmail };
+const fetchUserURLs = userID => {
+  const URLs = {};
+  for(shortURL in urlDatabase){
+    if(urlDatabase[shortURL].userID === userID){
+      URLs[shortURL] = urlDatabase[shortURL].longURL;
+    }
+  }
+  return URLs;
+}
+
+module.exports = { generateRandomString, getUserIdFromEmail, fetchUserURLs };

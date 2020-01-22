@@ -1,8 +1,15 @@
 const { urlDatabase, users } = require('./data');
+const fetchUserURLs = require('./helpers').fetchUserURLs;
 
 const browseURLS = (req,res) => {
-  const templateVars =  { urls: urlDatabase, user: users[req.cookies.user_id] };
-  res.render('urls_index', templateVars);
+  const userID = req.cookies.user_id;
+  if(userID){
+    const URLs = fetchUserURLs(userID);
+    console.log(URLs);
+    const templateVars =  { urls: URLs, user: users[req.cookies.user_id] };
+    return res.render('urls_index', templateVars);
+  }
+  res.render('urls_index', {urls: null, user: null});
 }
 
 const renderCreateURLPage = (req,res) => {
