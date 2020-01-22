@@ -37,19 +37,28 @@ const register = (req,res) => {
 const createURL = (req,res) => {
   const userID = req.cookies.user_id;
   const shortURL = generateRandomString(6);
-  urlDatabase[shortURL] = { longURL: req.body.longURL, userID };
+  if(userID){
+    urlDatabase[shortURL] = { longURL: req.body.longURL, userID };
+  }
   res.redirect(`/urls/${shortURL}`);
 }
 
 const updateURL = (req,res) => {
+  const userID = req.cookies.user_id;
   const shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = req.body.longURL;
+  if(urlDatabase[shortURL].userID === userID){
+    urlDatabase[shortURL].longURL = req.body.longURL;
+  } 
   res.redirect(`/urls/${shortURL}`);
 }
 
 const deleteURL = (req,res) => {
+  const userID = req.cookies.user_id;
   const shortURL = req.params.shortURL;
-  delete urlDatabase[shortURL];
+  console.log('pinged!');
+  if(urlDatabase[shortURL].userID === userID){
+    delete urlDatabase[shortURL];
+  }
   res.redirect('/urls');
 }
 

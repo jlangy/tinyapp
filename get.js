@@ -36,7 +36,7 @@ const readURL = (req,res) => {
 }
 
 const linkToExternalURL = (req,res) => {
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.shortURL].longURL);
 }
 
 const renderRegisterPage = (req,res) => {
