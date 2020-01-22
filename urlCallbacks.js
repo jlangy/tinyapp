@@ -41,6 +41,10 @@ const renderCreateURLPage = (req,res) => {
   res.redirect('/login');
 };
 
+const showJSON = (req, res) => {
+  res.json(urlDatabase);
+};
+
 //------------------------POST REQUESTS-----------------------
 
 const createURL = (req,res) => {
@@ -70,4 +74,4 @@ const deleteURL = (req,res) => {
   res.redirect('/urls');
 };
 
-module.exports = {browseURLS, readURL, linkToExternalURL, renderCreateURLPage, createURL, updateURL, deleteURL };
+module.exports = {browseURLS, readURL, linkToExternalURL, renderCreateURLPage, createURL, updateURL, deleteURL, showJSON };
