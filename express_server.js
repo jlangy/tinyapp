@@ -28,6 +28,10 @@ app.post('/urls/:shortURL', updateURL);
 app.post('/urls/:shortURL/delete', deleteURL);
 app.post('/logout', logout);
 
+app.get('*', (req,res) => {
+  res.redirect('/urls');
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
