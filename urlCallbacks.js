@@ -8,7 +8,7 @@ const browseURLS = (req,res) => {
   const userId = req.session.userId;
   if (userId) {
     const URLs = urlsForUser(userId, urlDatabase);
-    const templateVars =  { urls: URLs, user: users[req.session.userId] };
+    const templateVars =  { urls: URLs, user: users[userId] };
     return res.render('urls_index', templateVars);
   }
   res.render('urls_index', {urls: null, user: null});
