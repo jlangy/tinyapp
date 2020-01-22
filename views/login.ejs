@@ -16,16 +16,20 @@
       <div class="alert alert-danger" role="alert">
         One or more fields were left blank, please fill in all fields.
       </div>
-    <% } else if(error && error === 'repeat') { %>
+    <% } if(error && error === 'notFound') { %>
       <div class="alert alert-danger" role="alert">
-        That e-mail address is already registered. Please login or use a different e-mail.
+        That e-mail address is not registered. Please register or login with a different e-mail.
       </div>
+    <% } if(error && error === 'badPassword') { %>
+    <div class="alert alert-danger" role="alert">
+      Invalid password. Please try again.
+    </div>
     <% } %>
     <main class="d-flex justify-content-center" style="margin: 1em;">
       <div class="card w-25">
         <div class="card-body">
-          <h3 class="card-title text-center">Register</h3>
-          <form method="POST" action="/register">
+          <h3 class="card-title text-center">Log In</h3>
+          <form method="POST" action="/login">
             <div class="form-group">
               <label for="exampleInputEmail1">Email address</label>
               <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
@@ -36,7 +40,7 @@
               <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password">
             </div>
             <div class="container text-center">
-              <button type="submit" class="btn btn-primary">Register!</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>      
         </div>

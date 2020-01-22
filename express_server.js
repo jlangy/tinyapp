@@ -4,6 +4,18 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const PORT = 8080;
 
+const urlDatabase = {
+  'b2xVn2': 'http://www.lighthouselabs.ca',
+  '9sm5xK': 'http://www.google.com'
+};
+
+const users = {
+  123: {
+    id: "123",
+    email: "email@email.com",
+    password: "password123"
+  }
+}
 
 const generateRandomString = (numOfDigits) => {
   const alphaNums = 'QWERTYUIOPLKJHGFDSAZXCVBNMqwertyuioplkjhgfdsazxcvbnm1234567890'.split('');
@@ -15,16 +27,11 @@ const generateRandomString = (numOfDigits) => {
   return randomNum;
 }
 
-const urlDatabase = {
-  'b2xVn2': 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
-};
-
-const users = {
-  123: {
-    id: "123",
-    email: "email@email.com",
-    password: "password123"
+const getUserIdFromEmail = email => {
+  for(user in users){
+    if(users[user].email === email){
+      return user;
+    }
   }
 }
 
@@ -79,6 +86,25 @@ app.get('/register', (req,res) => {
   res.render('register', templateVars);
 });
 
+app.get('/login', (req,res) => {
+  const templateVars = { user: users[req.cookies.user_id], error: null}
+  res.render('login', templateVars);
+});
+
+app.post('/login', (req,res) => {
+  const userId = getUserIdFromEmail(req.body.email);
+  if(userId){
+    if(users[userId].password === req.body.password){
+      res.cookie('user_id', getUserIdFromEmail(req.body.email));
+      return res.redirect('/urls');
+    } 
+    res.status(403);
+    return res.render('login', { error: 'badPassword', username: null })
+  } 
+  res.status(403);
+  res.render('login', { error: 'notFound', username: null });
+});
+
 app.post('/register', (req,res) => {
   if(!req.body.email || !req.body.password){
     res.status(400);
@@ -111,14 +137,8 @@ app.post('/urls/:shortURL/delete', (req,res) => {
   res.redirect('/urls');
 });
 
-app.post('/login', (req,res) => {
-  const username = req.body.email;
-  res.cookie('user_id', username);
-  res.redirect('/urls');
-});
-
 app.post('/logout', (req,res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls');
 });
 
