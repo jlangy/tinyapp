@@ -6,8 +6,11 @@ const browseURLS = (req,res) => {
 }
 
 const renderCreateURLPage = (req,res) => {
-  const templateVars = { user: users[req.cookies.user_id] }
-  res.render('urls_new', templateVars);
+  if(users[req.cookies.user_id]){
+    const templateVars = { user: users[req.cookies.user_id] }
+    return res.render('urls_new', templateVars);
+  }
+  res.redirect('/login');
 }
 
 const readURL = (req,res) => {
