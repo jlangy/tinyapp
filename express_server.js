@@ -1,13 +1,17 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const PORT = 8080;
 const { browseURLS, renderCreateURLPage, readURL, linkToExternalURL, renderRegisterPage, renderLoginPage} = require('./get');
 const { login, register, createURL, updateURL, deleteURL, logout } = require('./post');
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
+
 app.set('view engine', 'ejs');
 
 app.get('/urls', browseURLS);

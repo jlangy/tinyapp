@@ -2,29 +2,29 @@ const { urlDatabase, users } = require('./data');
 const urlsForUser = require('./helpers').urlsForUser;
 
 const browseURLS = (req,res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   if(userID){
-    const URLs = urlsForUser(userID);
-    const templateVars =  { urls: URLs, user: users[req.cookies.user_id] };
+    const URLs = urlsForUser(userID, urlDatabase);
+    const templateVars =  { urls: URLs, user: users[req.session.user_id] };
     return res.render('urls_index', templateVars);
   }
   res.render('urls_index', {urls: null, user: null});
 }
 
 const renderCreateURLPage = (req,res) => {
-  if(users[req.cookies.user_id]){
-    const templateVars = { user: users[req.cookies.user_id] }
+  if(users[req.session.user_id]){
+    const templateVars = { user: users[req.session.user_id] }
     return res.render('urls_new', templateVars);
   }
   res.redirect('/login');
 }
 
 const readURL = (req,res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   if(!userID){
     return res.render('urls_show', {error: 'notLoggedIn'});
   }
-  const userURLs = urlsForUser(userID);
+  const userURLs = urlsForUser(userID, urlDatabase);
   const shortURL = req.params.shortURL;
   if(shortURL in userURLs){
     const longURL = userURLs[shortURL];
@@ -39,12 +39,12 @@ const linkToExternalURL = (req,res) => {
 }
 
 const renderRegisterPage = (req,res) => {
-  const templateVars = { user: users[req.cookies.user_id], error: null}
+  const templateVars = { user: users[req.session.user_id], error: null}
   res.render('register', templateVars);
 }
 
 const renderLoginPage = (req,res) => {
-  const templateVars = { user: users[req.cookies.user_id], error: null}
+  const templateVars = { user: users[req.session.user_id], error: null}
   res.render('login', templateVars);
 }
 

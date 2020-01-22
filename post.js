@@ -2,15 +2,16 @@ const { urlDatabase, users } = require('./data');
 const { generateRandomString, getUserIdFromEmail } = require('./helpers');
 const bcrypt = require('bcrypt');
 
+
 const login = (req,res) => {
   const { email, password } = req.body;
-  if(email === '' || password === ''){ //Note: could switch to required in html, or leave custom bootstrap msg
+  if(!email || !password){ //Note: could switch to required in html, or leave custom bootstrap msg
     res.status(400);
     return res.render('login', { error: 'empty', user: null });
   }
-  const userId = getUserIdFromEmail(email);
+  const userId = getUserIdFromEmail(email, users);
   if(userId && bcrypt.compareSync(password, users[userId].password)){
-    res.cookie('user_id', userId);
+    req.session.user_id = userId;
     return res.redirect('/urls');
   } 
   res.status(403);
@@ -18,22 +19,23 @@ const login = (req,res) => {
 }
 
 const register = (req,res) => {
-  if(!req.body.email || !req.body.password){
+  const { email, password } = req.body;
+  if(!email || !password){
     res.status(400);
     return res.render('register', {user: null, error: 'empty'});
-  } else if(getUserIdFromEmail(req.body.email)){
+  } else if(getUserIdFromEmail(email, users)){
     res.status(400);
     return res.render('register', {user: null, error: 'repeat'});
   }
   const userID = generateRandomString(6);
-  const passwordHash = bcrypt.hashSync(req.body.password, 10);
-  users[userID] = { id: userID, email: req.body.email, password: passwordHash }
-  res.cookie("user_id", userID);
+  const passwordHash = bcrypt.hashSync(password, 10);
+  users[userID] = { id: userID, email, password: passwordHash }
+  req.session.user_id = userID;
   res.redirect('/urls');
 }
 
 const createURL = (req,res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   const shortURL = generateRandomString(6);
   if(userID){
     urlDatabase[shortURL] = { longURL: req.body.longURL, userID };
@@ -42,7 +44,7 @@ const createURL = (req,res) => {
 }
 
 const updateURL = (req,res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
   if(urlDatabase[shortURL].userID === userID){
     urlDatabase[shortURL].longURL = req.body.longURL;
@@ -51,7 +53,7 @@ const updateURL = (req,res) => {
 }
 
 const deleteURL = (req,res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   const shortURL = req.params.shortURL;
   console.log('pinged!');
   if(urlDatabase[shortURL].userID === userID){
@@ -61,7 +63,7 @@ const deleteURL = (req,res) => {
 }
 
 const logout = (req,res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect('/urls');
 }
 

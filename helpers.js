@@ -1,5 +1,3 @@
-const { urlDatabase, users } = require('./data');
-
 const generateRandomString = (numOfDigits) => {
   const alphaNums = 'QWERTYUIOPLKJHGFDSAZXCVBNMqwertyuioplkjhgfdsazxcvbnm1234567890'.split('');
   let randomNum = '';
@@ -10,7 +8,7 @@ const generateRandomString = (numOfDigits) => {
   return randomNum;
 }
 
-const getUserIdFromEmail = email => {
+const getUserIdFromEmail = (email, users) => {
   for(const user in users){
     if(users[user].email === email){
       return user;
@@ -18,7 +16,7 @@ const getUserIdFromEmail = email => {
   } return false;
 }
 
-const urlsForUser = userID => {
+const urlsForUser = (userID, urlDatabase) => {
   const URLs = {};
   for(const shortURL in urlDatabase){
     if(urlDatabase[shortURL].userID === userID){
