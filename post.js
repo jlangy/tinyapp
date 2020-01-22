@@ -1,6 +1,6 @@
 const { urlDatabase, users } = require('./data');
 const { generateRandomString, getUserIdFromEmail } = require('./helpers');
-
+const bcrypt = require('bcrypt');
 
 const login = (req,res) => {
   if(req.body.email === ''){
@@ -9,7 +9,7 @@ const login = (req,res) => {
   }
   const userId = getUserIdFromEmail(req.body.email);
   if(userId){
-    if(users[userId].password === req.body.password){
+    if(bcrypt.compareSync(req.body.password, users[userId].password)) {   //users[userId].password === req.body.password){
       res.cookie('user_id', getUserIdFromEmail(req.body.email));
       return res.redirect('/urls');
     } 
@@ -29,7 +29,8 @@ const register = (req,res) => {
     return res.render('register', {user: null, error: 'repeat'});
   }
   const userID = generateRandomString(6);
-  users[userID] = { id: userID, email: req.body.email, password: req.body.password }
+  const passwordHash = bcrypt.hashSync(req.body.password, 10);
+  users[userID] = { id: userID, email: req.body.email, password: passwordHash }
   res.cookie("user_id", userID);
   res.redirect('/urls');
 }

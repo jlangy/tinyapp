@@ -5,7 +5,6 @@ const browseURLS = (req,res) => {
   const userID = req.cookies.user_id;
   if(userID){
     const URLs = urlsForUser(userID);
-    console.log(URLs);
     const templateVars =  { urls: URLs, user: users[req.cookies.user_id] };
     return res.render('urls_index', templateVars);
   }
