@@ -19,7 +19,7 @@ const renderLoginPage = (req,res) => {
 
 const login = (req,res) => {
   const { email, password } = req.body;
-  if (!email || !password) { //Note: could switch to required in html, or leave custom bootstrap msg
+  if (!email || !password) {
     res.status(400);
     return res.render('login', { error: 'empty', user: null });
   }
