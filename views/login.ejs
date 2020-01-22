@@ -16,14 +16,10 @@
       <div class="alert alert-danger" role="alert">
         One or more fields were left blank, please fill in all fields.
       </div>
-    <% } if(error && error === 'notFound') { %>
+    <% } if(error && error === 'badLogin') { %>
       <div class="alert alert-danger" role="alert">
-        That e-mail address is not registered. Please register or login with a different e-mail.
+        Either the e-mail or password is incorrect. Please try again, or <a href='/register'>register</a> if not a member.
       </div>
-    <% } if(error && error === 'badPassword') { %>
-    <div class="alert alert-danger" role="alert">
-      Invalid password. Please try again.
-    </div>
     <% } %>
     <main class="d-flex justify-content-center" style="margin: 1em;">
       <div class="card w-25">

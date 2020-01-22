@@ -3,21 +3,18 @@ const { generateRandomString, getUserIdFromEmail } = require('./helpers');
 const bcrypt = require('bcrypt');
 
 const login = (req,res) => {
-  if(req.body.email === ''){
+  const { email, password } = req.body;
+  if(email === '' || password === ''){ //Note: could switch to required in html, or leave custom bootstrap msg
     res.status(400);
     return res.render('login', { error: 'empty', user: null });
   }
-  const userId = getUserIdFromEmail(req.body.email);
-  if(userId){
-    if(bcrypt.compareSync(req.body.password, users[userId].password)) {   //users[userId].password === req.body.password){
-      res.cookie('user_id', getUserIdFromEmail(req.body.email));
-      return res.redirect('/urls');
-    } 
-    res.status(403);
-    return res.render('login', { error: 'badPassword', user: null })
+  const userId = getUserIdFromEmail(email);
+  if(userId && bcrypt.compareSync(password, users[userId].password)){
+    res.cookie('user_id', userId);
+    return res.redirect('/urls');
   } 
   res.status(403);
-  res.render('login', { error: 'notFound', user: null });
+  res.render('login', { error: 'badLogin', user: null });
 }
 
 const register = (req,res) => {

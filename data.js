@@ -4,11 +4,6 @@ const urlDatabase = {
 };
 
 const users = {
-  123456: {
-    id: "123456",
-    email: "email@email.com",
-    password: "password123"
-  }
 }
 
 module.exports = { urlDatabase, users };
