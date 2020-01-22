@@ -11,16 +11,16 @@ const generateRandomString = (numOfDigits) => {
 }
 
 const getUserIdFromEmail = email => {
-  for(user in users){
+  for(const user in users){
     if(users[user].email === email){
       return user;
     }
   } return false;
 }
 
-const fetchUserURLs = userID => {
+const urlsForUser = userID => {
   const URLs = {};
-  for(shortURL in urlDatabase){
+  for(const shortURL in urlDatabase){
     if(urlDatabase[shortURL].userID === userID){
       URLs[shortURL] = urlDatabase[shortURL].longURL;
     }
@@ -28,4 +28,4 @@ const fetchUserURLs = userID => {
   return URLs;
 }
 
-module.exports = { generateRandomString, getUserIdFromEmail, fetchUserURLs };
+module.exports = { generateRandomString, getUserIdFromEmail, urlsForUser };

@@ -1,10 +1,10 @@
 const { urlDatabase, users } = require('./data');
-const fetchUserURLs = require('./helpers').fetchUserURLs;
+const urlsForUser = require('./helpers').urlsForUser;
 
 const browseURLS = (req,res) => {
   const userID = req.cookies.user_id;
   if(userID){
-    const URLs = fetchUserURLs(userID);
+    const URLs = urlsForUser(userID);
     console.log(URLs);
     const templateVars =  { urls: URLs, user: users[req.cookies.user_id] };
     return res.render('urls_index', templateVars);
@@ -21,10 +21,18 @@ const renderCreateURLPage = (req,res) => {
 }
 
 const readURL = (req,res) => {
+  const userID = req.cookies.user_id;
+  if(!userID){
+    return res.render('urls_show', {error: 'notLoggedIn'});
+  }
+  const userURLs = urlsForUser(userID);
   const shortURL = req.params.shortURL;
-  const longURL = urlDatabase[shortURL];
-  const templateVars = { shortURL, longURL, user: users[req.cookies.user_id] };
-  res.render('urls_show', templateVars);
+  if(shortURL in userURLs){
+    const longURL = userURLs[shortURL];
+    const templateVars = { shortURL, longURL, user: users[userID], error: null };
+    return res.render('urls_show', templateVars);
+  }
+  res.render('urls_show', {error: 'notFound', user: users[userID]})
 }
 
 const linkToExternalURL = (req,res) => {
