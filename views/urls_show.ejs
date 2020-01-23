@@ -17,52 +17,55 @@
       You are not logged in. To display your URLs, please <a href="/login">login</a>.
     </div>
   <% } else { %>
-  <div class="card text-center">
-      <div class="card-header"></div>
-      <div class="card-body">
-        <h3 class="card-title">TinyURL for: <%= longURL %></h4>
-        <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
-        <span class="badge badge-success">Times Used: <%= visits %></span>
-        <span class="badge badge-success">Unique Visits: <%= uniqueVisits %></span>
-      </div>
-    <div class="card-footer text-muted">
-      <h4 class="card-title">Edit URL link:</h4>
-      <div class="d-flex justify-content-center">
-        <form class="form-inline" method="POST" action="/urls/<%= shortURL %>?_method=PUT">
-          <h5 class="card-subtitle text-muted">New URL:</h3>
-          <div class="form-group mx-sm-3 mb-2">
-            <label for="inputPassword2" class="sr-only">URL field</label>
-            <input class="form-control" id="inputPassword2" name="longURL" placeholder="<%= longURL %>">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Update</button>
-        </form>
+    <div class="card text-center">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <h3 class="card-title">TinyURL for: <%= urlObj.longURL %></h4>
+          <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
+          <p class="card-text">Created: <%= urlObj.creationDate %></p>
+          <span class="badge badge-success">Times Used: <%= urlObj.visits %></span>
+          <span class="badge badge-success">Unique Visits: <%= urlObj.uniqueVisits %></span>
+        </div>
+      <div class="card-footer text-muted">
+        <h4 class="card-title">Edit URL link:</h4>
+        <div class="d-flex justify-content-center">
+          <form class="form-inline" method="POST" action="/urls/<%= shortURL %>?_method=PUT">
+            <h5 class="card-subtitle text-muted">New URL:</h3>
+            <div class="form-group mx-sm-3 mb-2">
+              <label for="inputPassword2" class="sr-only">URL field</label>
+              <input class="form-control" id="inputPassword2" name="longURL" placeholder="<%= urlObj.longURL %>">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Update</button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
+    
+    <% if(urlObj.visitors) { %>
+      <div class="container mt-5 mb-4">
+        <h2 class="text-center">URL Usage History</h2>
+        <!-- <h3 class="text-center bg-success">Analytics</h3> -->
+        <table class="table table-bordered table-striped m-0">
+          <thead class="bg-success">
+            <tr>
+              <th scope="col">Visitor ID</th>
+              <th scope="col">Time of Visit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const visitor of urlObj.visitors) { %>
+            <tr>
+              <td><%= visitor.visitorId %></td>
+              <td><%= visitor.time %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>    
+    <% } %>
+
   <% } %>
 
-  <% if(visitors) { %>
-    <div class="container mt-5 mb-4">
-      <h2 class="text-center">URL Usage History</h2>
-      <!-- <h3 class="text-center bg-success">Analytics</h3> -->
-      <table class="table table-bordered table-striped m-0">
-        <thead class="bg-success">
-          <tr>
-            <th scope="col">Visitor ID</th>
-            <th scope="col">Time of Visit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (const visitor of visitors) { %>
-          <tr>
-            <td><%= visitor.visitorId %></td>
-            <td><%= visitor.time %></td>
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>    
-  <% } %>
   
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

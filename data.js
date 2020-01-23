@@ -1,6 +1,6 @@
 const urlDatabase = {
-  'b2xVn2': { longURL: 'http://www.lighthouselabs.ca', userId: 'PtahUh', visits: 0, uniqueVisits: 0, visitors: [] },
-  '9sm5xK': { longURL: 'http://www.google.com', userId: '123456', visits: 0, uniqueVisits: 0, visitors: [] }
+  'b2xVn2': { longURL: 'http://www.lighthouselabs.ca', userId: 'PtahUh', creationDate: "2020-1-19", visits: 0, uniqueVisits: 0, visitors: [] },
+  '9sm5xK': { longURL: 'http://www.google.com', userId: '123456', visits: 0, creationDate: "2020-1-19", uniqueVisits: 0, visitors: [] }
 };
 
 const users = { PtahUh: 

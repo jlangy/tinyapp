@@ -6,11 +6,19 @@ const bcrypt = require('bcrypt');
 //---------------------------GET REQUESTS-----------------------
 
 const renderRegisterPage = (req,res) => {
+  const userId = req.session.userId;
+  if(userId){
+    return res.redirect('/urls');
+  }
   const templateVars = { user: users[req.session.userId], error: null};
   res.render('register', templateVars);
 };
 
 const renderLoginPage = (req,res) => {
+  const userId = req.session.userId;
+  if(userId){
+    return res.redirect('/urls');
+  }
   const templateVars = { user: users[req.session.userId], error: null};
   res.render('login', templateVars);
 };
@@ -50,7 +58,7 @@ const register = (req,res) => {
 
 const logout = (req,res) => {
   req.session = null;
-  res.redirect('/urls');
+  res.redirect('/login');
 };
 
 module.exports = { renderRegisterPage, renderLoginPage, login, register, logout };
