@@ -1,4 +1,5 @@
 const express = require('express');
+const methodOverride = require('method-override');
 const app = express();
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
@@ -6,6 +7,7 @@ const PORT = 8080;
 const {browseURLS, readURL, linkToExternalURL, renderCreateURLPage, createURL, updateURL, deleteURL, showJSON } = require('./urlCallbacks');
 const { renderRegisterPage, renderLoginPage, login, register, logout } = require('./userCallbacks');
 
+app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: 'session',
@@ -25,8 +27,8 @@ app.get("/urls.json", showJSON);
 app.post('/login', login);
 app.post('/register', register);
 app.post('/urls', createURL);
-app.post('/urls/:shortURL', updateURL);
-app.post('/urls/:shortURL/delete', deleteURL);
+app.put('/urls/:shortURL', updateURL);
+app.delete('/urls/:shortURL', deleteURL);
 app.post('/logout', logout);
 
 app.get('*', (req,res) => {

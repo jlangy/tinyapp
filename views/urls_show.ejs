@@ -26,7 +26,7 @@
     <div class="card-footer text-muted">
       <h2 class="card-title">Edit</h2>
       <div class="d-flex justify-content-center">
-        <form class="form-inline" method="POST" action="/urls/<%= shortURL %>">
+        <form class="form-inline" method="POST" action="/urls/<%= shortURL %>?_method=PUT">
           <h4 class="card-subtitle text-muted">New URL:</h4>
           <div class="form-group mx-sm-3 mb-2">
             <label for="inputPassword2" class="sr-only">URL field</label>

@@ -17,7 +17,7 @@ const browseURLS = (req,res) => {
 const readURL = (req,res) => {
   const userId = req.session.userId;
   if (!userId) {
-    return res.render('urls_show', {error: 'notLoggedIn'});
+    return res.render('urls_show', {error: 'notLoggedIn', user: users[userId]});
   }
   const userURLs = urlsForUser(userId, urlDatabase);
   const shortURL = req.params.shortURL;
@@ -26,6 +26,7 @@ const readURL = (req,res) => {
     const templateVars = { shortURL, longURL, user: users[userId], error: null };
     return res.render('urls_show', templateVars);
   }
+  res.status(404);
   res.render('urls_show', {error: 'notFound', user: users[userId]});
 };
 
@@ -59,19 +60,20 @@ const createURL = (req,res) => {
 const updateURL = (req,res) => {
   const userId = req.session.userId;
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL].userId === userId) {
+  if (urlDatabase[shortURL] && urlDatabase[shortURL].userId === userId) {
     urlDatabase[shortURL].longURL = req.body.longURL;
+    return res.redirect(`/urls/${shortURL}`);
   }
-  res.redirect(`/urls/${shortURL}`);
+  res.sendStatus(404);
 };
 
 const deleteURL = (req,res) => {
   const userId = req.session.userId;
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL].userId === userId) {
+  if (urlDatabase[shortURL] && urlDatabase[shortURL].userId === userId) {
     delete urlDatabase[shortURL];
   }
-  res.redirect('/urls');
+  res.sendStatus(404);
 };
 
 module.exports = {browseURLS, readURL, linkToExternalURL, renderCreateURLPage, createURL, updateURL, deleteURL, showJSON };
