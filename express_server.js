@@ -27,9 +27,10 @@ app.get("/urls.json", showJSON);
 app.post('/login', login);
 app.post('/register', register);
 app.post('/urls', createURL);
+app.post('/logout', logout);
+
 app.put('/urls/:shortURL', updateURL);
 app.delete('/urls/:shortURL', deleteURL);
-app.post('/logout', logout);
 
 app.get('*', (req,res) => {
   res.redirect('/urls');
