@@ -6,7 +6,7 @@ const cookieSession = require('cookie-session');
 const PORT = 8080;
 const urlRouter = require('./routes/urls');
 const { urlDatabase, users } = require('./data');
-const { generateRandomString, getUserByEmail } = require('./helpers');
+const { generateRandomString, getUserByEmail, urlsForUser, hasVisited } = require('./helpers');
 const bcrypt = require('bcrypt');
 
 app.use(methodOverride('_method'));
@@ -83,13 +83,13 @@ app.get('/u/:shortURL', (req,res) => {
   if (!urlDatabase[shortURL]) {
     return res.render('not_found', {user: users[req.session.userId]});
   }
-  urlDatabase[shortURL].visits += 1;
   let visitorId = req.session.visitorId;
   if (!visitorId) {
     visitorId = generateRandomString(6);
     req.session.visitorId = visitorId;
-    urlDatabase[shortURL].uniqueVisits += 1;
   }
+  urlDatabase[shortURL].uniqueVisits += !hasVisited(visitorId, urlDatabase[shortURL].visitors);
+  urlDatabase[shortURL].visits += 1;
   const time = new Date().toUTCString();
   urlDatabase[shortURL].visitors.push({ visitorId, time});
   res.redirect(urlDatabase[shortURL].longURL);

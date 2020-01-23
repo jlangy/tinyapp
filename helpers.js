@@ -16,6 +16,15 @@ const getUserByEmail = (email, users) => {
   }
 };
 
+const hasVisited = (visitorId, visitors) => {
+  for(const visitor of visitors){
+    if(visitor.visitorId === visitorId){
+      return true;
+    }
+  }
+  return false;
+}
+
 const urlsForUser = (userId, urlDatabase) => {
   const URLs = {};
   for (const shortURL in urlDatabase) {
@@ -26,4 +35,4 @@ const urlsForUser = (userId, urlDatabase) => {
   return URLs;
 };
 
-module.exports = { generateRandomString, getUserByEmail, urlsForUser };
+module.exports = { generateRandomString, getUserByEmail, urlsForUser, hasVisited };
