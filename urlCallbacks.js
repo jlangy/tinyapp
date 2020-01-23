@@ -17,30 +17,35 @@ const browseURLS = (req,res) => {
 const readURL = (req,res) => {
   const userId = req.session.userId;
   if (!userId) {
-    return res.render('urls_show', {error: 'notLoggedIn', user: users[userId], visits: null, uniqueVisits: null});
+    return res.render('urls_show', {error: 'notLoggedIn', user: null, visits: null, uniqueVisits: null, visitors: null});
   }
   const userURLs = urlsForUser(userId, urlDatabase);
   const shortURL = req.params.shortURL;
   if (shortURL in userURLs) {
+    const urlObj = urlDatabase[shortURL];
     const longURL = userURLs[shortURL];
-    const templateVars = { shortURL, longURL, user: users[userId], error: null, visits: urlDatabase[shortURL].visits, uniqueVisits: urlDatabase[shortURL].visitors.length};
+    const templateVars = { shortURL, longURL, user: users[userId], error: null, visits: urlObj.visits, uniqueVisits: urlObj.uniqueVisits, visitors: urlObj.visitors};
     return res.render('urls_show', templateVars);
   }
   res.status(404);
-  res.render('urls_show', {error: 'notFound', user: users[userId], visits: null});
+  res.render('urls_show', {error: 'notFound', user: users[userId], visits: null,  visitors: null});
 };
 
 const linkToExternalURL = (req,res) => {
-  if(!urlDatabase[req.params.shortURL]){
+  const shortURL = req.params.shortURL;
+  if(!urlDatabase[shortURL]){
     return res.render('not_found', {user: users[req.session.userId]});
   }
-  urlDatabase[req.params.shortURL].visits += 1;
-  if(!req.session.visitorId){
-    const visitorId = generateRandomString(6);
-    urlDatabase[req.params.shortURL].visitors.push(visitorId);
+  urlDatabase[shortURL].visits += 1;
+  let visitorId = req.session.visitorId;
+  if(!visitorId){
+    visitorId = generateRandomString(6);
     req.session.visitorId = visitorId;
+    urlDatabase[shortURL].uniqueVisits += 1;
   }
-  res.redirect(urlDatabase[req.params.shortURL].longURL);
+  const time = new Date().toUTCString();
+  urlDatabase[shortURL].visitors.push({ visitorId, time});
+  res.redirect(urlDatabase[shortURL].longURL);
 };
 
 const renderCreateURLPage = (req,res) => {
@@ -61,7 +66,7 @@ const createURL = (req,res) => {
   const userId = req.session.userId;
   const shortURL = generateRandomString(6);
   if (userId) {
-    urlDatabase[shortURL] = { longURL: req.body.longURL, userId: userId, visits: 0, visitors: [] };
+    urlDatabase[shortURL] = { longURL: req.body.longURL, userId: userId, visits: 0, uniqueVisits: 0, visitors: [] };
   }
   res.redirect(`/urls/${shortURL}`);
 };

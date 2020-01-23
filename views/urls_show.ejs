@@ -20,16 +20,16 @@
   <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %></h5>
+        <h3 class="card-title">TinyURL for: <%= longURL %></h4>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
         <span class="badge badge-success">Times Used: <%= visits %></span>
         <span class="badge badge-success">Unique Visits: <%= uniqueVisits %></span>
       </div>
     <div class="card-footer text-muted">
-      <h2 class="card-title">Edit</h2>
+      <h4 class="card-title">Edit URL link:</h4>
       <div class="d-flex justify-content-center">
         <form class="form-inline" method="POST" action="/urls/<%= shortURL %>?_method=PUT">
-          <h4 class="card-subtitle text-muted">New URL:</h4>
+          <h5 class="card-subtitle text-muted">New URL:</h3>
           <div class="form-group mx-sm-3 mb-2">
             <label for="inputPassword2" class="sr-only">URL field</label>
             <input class="form-control" id="inputPassword2" name="longURL" placeholder="<%= longURL %>">
@@ -39,6 +39,29 @@
       </div>
     </div>
   </div>
+  <% } %>
+
+  <% if(visitors) { %>
+    <div class="container mt-5 mb-4">
+      <h2 class="text-center">URL Usage History</h2>
+      <!-- <h3 class="text-center bg-success">Analytics</h3> -->
+      <table class="table table-bordered table-striped m-0">
+        <thead class="bg-success">
+          <tr>
+            <th scope="col">Visitor ID</th>
+            <th scope="col">Time of Visit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const visitor of visitors) { %>
+          <tr>
+            <td><%= visitor.visitorId %></td>
+            <td><%= visitor.time %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>    
   <% } %>
   
   <!-- Bootstrap JS -->
