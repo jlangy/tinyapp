@@ -17,13 +17,13 @@ const browseURLS = (req,res) => {
 const readURL = (req,res) => {
   const userId = req.session.userId;
   if (!userId) {
-    return res.render('urls_show', {error: 'notLoggedIn', user: users[userId], visits: null});
+    return res.render('urls_show', {error: 'notLoggedIn', user: users[userId], visits: null, uniqueVisits: null});
   }
   const userURLs = urlsForUser(userId, urlDatabase);
   const shortURL = req.params.shortURL;
   if (shortURL in userURLs) {
     const longURL = userURLs[shortURL];
-    const templateVars = { shortURL, longURL, user: users[userId], error: null, visits: urlDatabase[shortURL].visits };
+    const templateVars = { shortURL, longURL, user: users[userId], error: null, visits: urlDatabase[shortURL].visits, uniqueVisits: urlDatabase[shortURL].visitors.length};
     return res.render('urls_show', templateVars);
   }
   res.status(404);
@@ -31,13 +31,21 @@ const readURL = (req,res) => {
 };
 
 const linkToExternalURL = (req,res) => {
+  if(!urlDatabase[req.params.shortURL]){
+    return res.render('not_found', {user: users[req.session.userId]});
+  }
   urlDatabase[req.params.shortURL].visits += 1;
+  if(!req.session.visitorId){
+    const visitorId = generateRandomString(6);
+    urlDatabase[req.params.shortURL].visitors.push(visitorId);
+    req.session.visitorId = visitorId;
+  }
   res.redirect(urlDatabase[req.params.shortURL].longURL);
 };
 
 const renderCreateURLPage = (req,res) => {
   if (users[req.session.userId]) {
-    const templateVars = { user: users[req.session.userId] };
+    const templateVars = { user: users[req.session.userId], error: null };
     return res.render('urls_new', templateVars);
   }
   res.redirect('/login');
@@ -53,7 +61,7 @@ const createURL = (req,res) => {
   const userId = req.session.userId;
   const shortURL = generateRandomString(6);
   if (userId) {
-    urlDatabase[shortURL] = { longURL: req.body.longURL, userId: userId, visits: 0 };
+    urlDatabase[shortURL] = { longURL: req.body.longURL, userId: userId, visits: 0, visitors: [] };
   }
   res.redirect(`/urls/${shortURL}`);
 };

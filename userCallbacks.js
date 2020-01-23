@@ -44,6 +44,7 @@ const register = (req,res) => {
   const userId = generateRandomString(6);
   const passwordHash = bcrypt.hashSync(password, 10);
   users[userId] = { id: userId, email, password: passwordHash };
+  console.log(users);
   req.session.userId = userId;
   res.redirect('/urls');
 };
